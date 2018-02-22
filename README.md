@@ -168,7 +168,3 @@
              DecisionTree and RandomForest theory a little better.  I have pretty good grasp of LinearRegression and
              LogisticRegression and PCA thanks to  "Distributed Machine Learning with Apache Spark (SQL, DataFrame)"
              course offered by edX
-             
-                           
-             
-                                      
