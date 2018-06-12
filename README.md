@@ -27,13 +27,14 @@
                             filter(!isnull($"ocean_proximity"))
                             
           For some reasons, Spark does not filter out 'isnull' data of ' ocean_proximity'.  Without filtering,
-          I will get counts of fields of NaN not and total counts of each field only execeed 20640 which I got from 
-          Panada steadily but kept flutuating.
+          I will get counts execeeding 20640 which I got from Panada steadily.  Also the number I got from 
+          spark kept flutuating.
           Without my customized schema, all fields are of StringType.  Adding option of "header") to tell Spark 
           the first line is heade not data.
           
-       d) Panda use info, describe and head for basic statistics and Spark use printSchema, describe.show and show for 
-          that. Panda use 'value_counts' to display group by counts in descending order.  
+       d) Panda use info, describe and head for basic statistics and Spark use printSchema, summary.show and show for 
+          that. Panda use 'value_counts' to display group by counts in descending order.  Spark describe.show does not 
+          include percentile: (25%, 50%(median) etc. 
           
           housing["ocean_proximity"].value_counts() //panda way
           housing.groupBy($"ocean_proximity").count().orderBy(desc("count")).show() // Spark way
@@ -67,7 +68,7 @@
            
        f)  There is no out-of-box StratifiedSplit implementation in Spark.  Scikit-Learn has StratifiedShuffleSplit in 
            model_selection package. However, you can put together StratifiedSplit strategy by using 
-           Dataset.stat.sampleData with fraction map.
+           Dataset.stat.sampleBy with fraction map.
            
                 val fractions = housing_income_cat.select($"income_cat").distinct().rdd.map {
                     case Row(key: Double) =>
@@ -164,7 +165,7 @@
              
           The best I can get is
                
-                 (lrModel.getEstimatorParamMaps zip lrModel.avgMetrics).sortBy(_._2).first._1
+                 (lrModel.getEstimatorParamMaps zip lrModel.avgMetrics).minBy(_._2)._1
                  
           The first part returns Array       
                  Array(({
