@@ -212,6 +212,15 @@
     Install toree with what intepretaters you need.  The following is an example    
                  jupyter toree install --user --spark_home=$SPARK_HOME --kernel_name=apache_toree -\ 
                  -interpreters=PySpark,Scala,SQL   
+    Since we use --user, it will install toree and its kernel profiles in .local.  This will install 
+    fandev@ubuntu:~/.local/share/jupyter/kernels$ ls -l
+    total 16
+    drwxrwxr-x 5 fandev fandev 4096 Oct  6 19:34 apache_toree_pyspark
+    drwxrwxr-x 5 fandev fandev 4096 Oct  6 19:31 apache_toree_scala
+    drwxrwxr-x 5 fandev fandev 4096 Oct  6 19:36 apache_toree_sql
+
+    To update Spark version, either change SPARK_HOME and re-run the above command or change kernel.json under 
+    those folders individually.                                                                                                 
                  
     Launch jupyter notebook again, click new button, you should see pyspark, Scala and SQL options.  Of course, 
     you have to import necessary Spark or scala/ python libaraies needed. You can try  my Pi.ipynb under 
