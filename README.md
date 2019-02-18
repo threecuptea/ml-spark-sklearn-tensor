@@ -18,19 +18,8 @@
           visualization when Panda combined with matplotlib.pyplot capability. They are irreplaceable as a tool to 
           gain first insight of data.  Spark cannot compete on this front.
                  
-       c) Spark borrows at least SQLFrame terms from Panda.  It's very easy for Panda to load Housing data  No gimmick
-          and no data manipulation.  I need to define schema and code the following to get Spark to work Housing data 
-          as expected.
-          
-              val housing = spark.read.
-                            option("header","true").schema(customSchema).csv("../datasets/housing").
-                            filter(!isnull($"ocean_proximity"))
-                            
-          For some reasons, Spark does not filter out 'isnull' data of ' ocean_proximity'.  Without filtering,
-          I will get counts execeeding 20640 which I got from Panada steadily.  Also the number I got from 
-          spark kept flutuating.
-          Without my customized schema, all fields are of StringType.  Adding option of "header") to tell Spark 
-          the first line is heade not data.
+       c) Spark borrows at least DataFrame terms from Panda.  It's very easy for Panda to load Housing data  
+          Spark does not always infer schema correctly. Without the customized schema, all fields are of StringType.  
           
        d) Panda use info, describe and head for basic statistics and Spark use printSchema, summary.show and show for 
           that. Panda use 'value_counts' to display group by counts in descending order.  Spark describe.show does not 
@@ -53,7 +42,7 @@
               return np.c_[ X, room_per_household, population_per_household ]
           
           to add additional fields to DataFrame. You do need to be good at Numpy. rooms_ix etc. are indexes and np.c_
-          combine data horizontally as long as data have the same numbers of row.  
+          combine data horizontally as long as data have the same numbers of row. vstack and hstack requires the same shape.
           
           Spark does allow data and schema/ column name separately like
               spark.read.schema(customSchema).csv(......)
@@ -128,7 +117,7 @@
                          
        i) Notice that I only apply Pipeline up to OneHotEncoder.  That's because I have to deal with Spark legacy 
           issue.  Spark RDD use org.apache.spark.mllib.regression.LabeledPoint and point is a 
-          org.apache.spark.mllib.linalg.Vector.  MostSpark Regressors and Classifiers still only take Vector 
+          org.apache.spark.mllib.linalg.Vector.  Most Spark Regressors and Classifiers still only take Vector 
           (in ml instead of mllib) features.  StandardScaler estimator only take Vector data too.  Therefore, 
           I have to convert data to Vector:
              
@@ -210,8 +199,8 @@
                  pip install ~/Downloads/toree-0.2.0.dev1.tar.gz                 
                   
     Install toree with what intepretaters you need.  The following is an example    
-                 jupyter toree install --user --spark_home=$SPARK_HOME --kernel_name=apache_toree -\ 
-                 -interpreters=PySpark,Scala,SQL   
+                 jupyter toree install --user --spark_home=$SPARK_HOME --kernel_name=apache_toree \ 
+                 --interpreters=PySpark,Scala,SQL   
     Since we use --user, it will install toree and its kernel profiles in .local.  This will install 
     fandev@ubuntu:~/.local/share/jupyter/kernels$ ls -l
     total 16
